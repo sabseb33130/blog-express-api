@@ -2,12 +2,11 @@
   "name": "blog-express-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "watch": "tsc -w",
-"start": "nodemon index.js"
-
+    "watch": "tsc -w",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
