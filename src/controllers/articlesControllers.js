@@ -1,5 +1,8 @@
 const client = require('../client');
+const ArticleServices = require('../services/articlesServices');
 require('dotenv').config();
+
+const articleService = new ArticleServices()
 
 class ArticleController {
     async getAllArticle(req, res) {
@@ -10,7 +13,7 @@ class ArticleController {
             res.status(200).json(
                 {
                     status: "success",
-                    data: data.rows
+                    data: art.rows
                 }
             )
         }
@@ -30,7 +33,7 @@ class ArticleController {
 
         if (!Number.isNaN(Number(articleId))) {
             try {
-                const id_article = await usersService.getArticleById(articleId);
+                const id_article = await articleService.getArticleById(articleId);
                 if (id_article.rows.length === 1) {
                     res.status(200).json(
                         {
@@ -73,14 +76,14 @@ class ArticleController {
         console.log(req.body);
 
 
-        if (titre && article && user_id != null) {
+        if (titre && article != null) {
             try {
-            
-                const validated_article = await usersService.postArticle(titre, article, user_id);
-                res.status(201).json(
+
+                const validated_article = await articleService.postArticle(titre, article);
+                res.status(200).json(
                     {
                         status: "success",
-                        message: "message posté avec succés",
+                        message: "article posté avec succés",
                         data: validated_article.rows[0]
                     }
                 )
@@ -122,13 +125,13 @@ class ArticleController {
 
                 }
                 else {
-                    const data = await client.query('DELETE from article WHERE id= $1', [deleteId])
+                    const deleted_art = await articleService.deleteArticle(id);
 
-                    if (data.rowCount === 1) {
+                    if (deleted_art.rowCount === 1) {
                         res.status(200).json(
                             {
                                 status: "success",
-                                message: "ticket supprimé"
+                                message: "article supprimé"
                             }
                         )
                     }
@@ -137,7 +140,7 @@ class ArticleController {
                         res.status(404).json(
                             {
                                 status: "fail",
-                                message: "id ne correspond à aucun ticket"
+                                message: "id ne correspond à aucun article"
                             }
                         )
                     }
@@ -167,7 +170,7 @@ class ArticleController {
 
     async updateArticle(req, res) {
         const updateId = req.params.id
-        const updateArt = req.body.message
+        const updateArt = req.body.article
         const updateArch = req.body.archiver
         const updateTitre = req.body.titre
         const test = req.userId
@@ -188,11 +191,11 @@ class ArticleController {
 
                         }
                         else {
-                            const data = await client.query('UPDATE ticket SET  titre = $4, archiver = $6, article = $5 WHERE id = $1 RETURNING *', [updateArch, updateTitre, updateId, updateArt])
+                            const upArt = await articleService.updateArticle(titre, article, archiver);
 
-                            if (data.rowCount > 0) {
+                            if (upArt.rowCount > 0) {
                                 res.status(201).json({
-                                    status: "success", message: "données modifiées", data: data.rows[0]
+                                    status: "success", message: "données modifiées", data: upArt.rows[0]
                                 })
                             }
                             else {
@@ -241,7 +244,7 @@ class ArticleController {
 
 }
 
-module.exports = ArticleController;    
+module.exports = ArticleController;
 
 
 
