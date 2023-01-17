@@ -37,7 +37,7 @@ class ArticleController {
         } else {
           res.status(404).json({
             status: "fail",
-            message: "id ne correspond à aucun ticket",
+            message: "id ne correspond à aucun article",
           });
         }
       } catch (err) {
