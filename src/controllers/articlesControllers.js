@@ -160,7 +160,7 @@ class ArticleController {
               "SELECT id FROM article WHERE id=$1",
               [updateId]
             );
-             if (test !== ticketData.rows[0]["userId"]) {
+             if (test !== Data.rows[0]["userId"]) {
               res.status(404).json({
                 status: "FAIL",
                 message: "update non autorisée",

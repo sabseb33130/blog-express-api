@@ -55,7 +55,7 @@ class UsersControllers {
   async register(req, res) {
     const name = req.body.name;
     const password = req.body.password;
-    
+    console.log(name, password);
     bcrypt.hash(password, 10, async function (err, hash) {
       try {
         const data = await usersServices.addUser(name, hash);
