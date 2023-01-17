@@ -3,16 +3,15 @@ const accessTokenSecret = process.env.ACCESTOKENSECRET;
 
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
+  const token = authHeader.split(" ")[1];
   if (authHeader) {
-    const token = authHeader.split(" ")[1];
-
-    jwt.verify(token, accessTokenSecret, (err, userId) => {
+    jwt.verify(token, accessTokenSecret, (err, decode) => {
       if (err) {
         return res.sendStatus(403);
       }
 
-      req.userId = token.userId;
+      req.userId = decode.id;
+
       next();
     });
   } else {

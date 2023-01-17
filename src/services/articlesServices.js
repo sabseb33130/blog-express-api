@@ -36,7 +36,7 @@ class ArticleServices {
 
   async updateArticle(id, titre, article, archiver) {
     const data = await client.query(
-      "UPDATE article SET titre=$2, article=$3, archiver=true WHERE id = $1 returning *",
+      "UPDATE article SET titre=$2, article=$3, archiver=$4 WHERE id = $1 returning *",
       [id, titre, article, archiver]
     );
     if (data.rowCount) {

@@ -94,6 +94,7 @@ class ArticleController {
           "SELECT id,user_id FROM article WHERE id=$1",
           [deleteId]
         );
+        console.log(articleData.rows[0]["userId"]);
         if (test !== articleData.rows[0]["userId"]) {
           res.status(404).json({
             status: "FAIL",
@@ -136,63 +137,62 @@ class ArticleController {
     const updateArch = req.body.archiver;
     const updateTitre = req.body.titre;
     const test = req.userId;
-    if (Number.isNaN(Number(updateId))) {
+    const Data = await client.query("SELECT * FROM article WHERE id=$1", [
+      updateId,
+    ]);
+
+    if (test !== Data.rows[0].user_id) {
       res.status(404).json({
         status: "FAIL",
-        message: "Nécessite un nombre valable en tant qu'Id",
+        message: "update non autorisée",
       });
     } else {
-      if (updateArch != true && updateArch != false) {
-        res.status(400).json({ status: "FAIL", message: "Booléen attendu" });
+      if (Number.isNaN(Number(updateId))) {
+        res.status(404).json({
+          status: "FAIL",
+          message: "Nécessite un nombre valable en tant qu'Id",
+        });
       } else {
-        if (
-          updateArt === undefined ||
-          updateTitre === undefined ||
-          updateArch === undefined
-        ) {
-          res.status(404).json({
-            status: "FAIL",
-            message: "Aucun article ne correspond à cet id",
-          });
+        if (updateArch != true && updateArch != false) {
+          res.status(400).json({ status: "FAIL", message: "Booléen attendu" });
         } else {
-          try {
-            /*const Data = await client.query(
-              "SELECT id FROM article WHERE id=$1",
-              [updateId]
-            );
-             if (test !== Data.rows[0]["userId"]) {
-              res.status(404).json({
-                status: "FAIL",
-                message: "update non autorisée",
-              });
-            } else {*/
-            const upArt = await articleService.updateArticle(
-              updateId,
-              updateTitre,
-              updateArt,
-              updateArch
-            );
+          if (
+            updateArt === undefined ||
+            updateTitre === undefined ||
+            updateArch === undefined
+          ) {
+            res.status(404).json({
+              status: "FAIL",
+              message: "Aucun article ne correspond à cet id",
+            });
+          } else {
+            try {
+              const upArt = await articleService.updateArticle(
+                updateId,
+                updateTitre,
+                updateArt,
+                updateArch
+              );
 
-            if (upArt) {
-              res.status(201).json({
-                status: "success",
-                message: "données modifiées",
-                data: upArt,
-              });
-            } else {
-              res.status(400).json({
+              if (upArt) {
+                res.status(201).json({
+                  status: "success",
+                  message: "données modifiées",
+                  data: upArt,
+                });
+              } else {
+                res.status(400).json({
+                  status: "FAIL",
+                  message: "valeur manquante",
+                });
+              }
+            } catch (err) {
+              console.log(err);
+              res.status(500).json({
                 status: "FAIL",
-                message: "valeur manquante",
+                message: "erreur serveur",
               });
             }
-
-            //   }
-          } catch (err) {
-            console.log(err);
-            res.status(500).json({
-              status: "FAIL",
-              message: "erreur serveur",
-            });
           }
         }
       }
