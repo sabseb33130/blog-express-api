@@ -102,9 +102,10 @@ class ArticleController {
             message: "suppression non autorisée",
           });
         } else {
-          const deleted_art = await articleService.deleteArticle(id);
+          const deleted_art = await articleService.deleteArticle(deleteId);
+          console.log(deleted_art.rowCount);
 
-          if (deleted_art.rowCount === 1) {
+          if (deleted_art.rowCount === undefined) {
             res.status(200).json({
               status: "success",
               message: "article supprimé",
