@@ -137,14 +137,14 @@ class ArticleController {
     const updateArt = req.body.article;
     const updateArch = req.body.archiver;
     const updateTitre = req.body.titre;
-    const test = req.userId;
+    //const test = req.userId;
 
     if (!Number.isNaN(Number(updateId))) {
-      if (updateArt && updateTitre && updateArch !== undefined) {
+      if (updateArt !== undefined || updateTitre !== undefined || updateArch !== undefined) {
         if (updateArch === true || updateArch === false) {
           try {
-            const ticketData = await client.query(
-              "SELECT id FROM ticket WHERE id=$1",
+            /*const ticketData = await client.query(
+              "SELECT id FROM  WHERE id=$1",
               [updateId]
             );
             if (test !== ticketData.rows[0]["userId"]) {
@@ -152,11 +152,11 @@ class ArticleController {
                 status: "FAIL",
                 message: "update non autorisée",
               });
-            } else {
+            } else {*/
               const upArt = await articleService.updateArticle(
-                titre,
-                article,
-                archiver
+                updateTitre,
+                updateArt,
+                updateArch
               );
 
               if (upArt.rowCount > 0) {
@@ -172,7 +172,8 @@ class ArticleController {
                 });
               }
             }
-          } catch (err) {
+          catch (err) {
+            console.log(err);
             res.status(500).json({
               status: "FAIL",
               message: "erreur serveur",

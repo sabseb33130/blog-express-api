@@ -38,7 +38,7 @@ class ArticleServices {
 
   async updateArticle(titre, article, archiver) {
     const data = await client.query(
-      "UPDATE article SET (titre, article, archiver) VALUES ($4,$5,true) WHERE id = $1 returning *",
+      "UPDATE article SET (titre, article, archiver) VALUES ($1,$2,true) WHERE id = $1 returning *",
       [titre, article, archiver]
     );
     console.log(data.rows, id);
