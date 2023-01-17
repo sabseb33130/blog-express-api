@@ -3,6 +3,7 @@ const express = require("express");
 require("dotenv").config(); // permet de cacher les donnée dans un autrs fichier .env
 
 const usersRouter = require("./routes/usersRouter");
+const commentairesRouter = require("./routes/commentairesRouter");
 const articlesRouter = require("./routes/articlesRouter");
 const app = express();
 const port = 8000;
@@ -28,6 +29,7 @@ app.use(function (req, res, next) {
 //activation bodyparse pour JSON
 app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/commentaires", commentairesRouter);
 app.all("*", function (req, res) {
   res.status(404).end("not found");
 });
