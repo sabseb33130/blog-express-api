@@ -3,8 +3,7 @@ const client = require("../client");
 class ArticleServices {
   async getAllArticle() {
     const data = await client.query("SELECT * FROM article");
-    console.log(data);
-    console.log(data.rows);
+
     if (data.rowCount) {
       return data.rows;
     }
@@ -15,7 +14,6 @@ class ArticleServices {
   async getArticleById(id) {
     const data = await client.query("SELECT * FROM article WHERE id=$1", [id]);
 
-    console.log(data.rows, id);
     if (data.rowCount) {
       return data.rows[0];
     }
@@ -28,7 +26,7 @@ class ArticleServices {
       "INSERT INTO article (titre, article) VALUES ($1,$2) returning *",
       [titre, article]
     );
-    console.log(data.rows);
+
     if (data.rowCount) {
       return data.rows[0];
     }
@@ -36,12 +34,11 @@ class ArticleServices {
     return undefined;
   }
 
-  async updateArticle(titre, article, archiver) {
+  async updateArticle(id, titre, article, archiver) {
     const data = await client.query(
-      "UPDATE article SET (titre, article, archiver) VALUES ($1,$2,true) WHERE id = $1 returning *",
-      [titre, article, archiver]
+      "UPDATE article SET titre=$2, article=$3, archiver=$4 WHERE id = $1 returning *",
+      [id, titre, article, archiver]
     );
-    console.log(data.rows, id);
     if (data.rowCount) {
       return data.rows[0];
     }
@@ -54,7 +51,7 @@ class ArticleServices {
       "DELETE FROM article WHERE id=$1 returning *",
       [id]
     );
-    console.log(data.rows, id);
+
     if (data.rowCount) {
       return data.rows[0];
     }

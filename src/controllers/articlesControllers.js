@@ -8,7 +8,6 @@ class ArticleController {
   async getAllArticle(req, res) {
     try {
       const art = await articleService.getAllArticle();
-      console.log(art.rowCount);
 
       res.status(200).json({
         status: "success",
@@ -29,7 +28,7 @@ class ArticleController {
     if (!Number.isNaN(Number(articleId))) {
       try {
         const id_article = await articleService.getArticleById(articleId);
-        console.log(id_article);
+
         if (articleId >= 1) {
           res.status(200).json({
             status: "success",
@@ -76,7 +75,6 @@ class ArticleController {
           status: "fail",
           message: "erreur serveur",
         });
-        console.log(err);
       }
     } else {
       res.status(400).json({
@@ -103,12 +101,12 @@ class ArticleController {
           });
         } else {
           const deleted_art = await articleService.deleteArticle(deleteId);
-          console.log(deleted_art.rowCount);
 
-          if (deleted_art.rowCount === undefined) {
+          if (deleted_art.id === undefined) {
             res.status(200).json({
               status: "success",
               message: "article supprimé",
+              data: deleted_art,
             });
           } else {
             res.status(404).json({
@@ -133,69 +131,71 @@ class ArticleController {
   }
 
   async updateArticle(req, res) {
-    const updateId = req.params.id;
+    const updateId = Number(req.params.id);
     const updateArt = req.body.article;
     const updateArch = req.body.archiver;
     const updateTitre = req.body.titre;
-    //const test = req.userId;
-
-    if (!Number.isNaN(Number(updateId))) {
-      if (updateArt !== undefined || updateTitre !== undefined || updateArch !== undefined) {
-        if (updateArch === true || updateArch === false) {
+    const test = req.userId;
+    if (Number.isNaN(Number(updateId))) {
+      res.status(404).json({
+        status: "FAIL",
+        message: "Nécessite un nombre valable en tant qu'Id",
+      });
+    } else {
+      if (updateArch != true && updateArch != false) {
+        res.status(400).json({ status: "FAIL", message: "Booléen attendu" });
+      } else {
+        if (
+          updateArt === undefined ||
+          updateTitre === undefined ||
+          updateArch === undefined
+        ) {
+          res.status(404).json({
+            status: "FAIL",
+            message: "Aucun article ne correspond à cet id",
+          });
+        } else {
           try {
-            /*const ticketData = await client.query(
-              "SELECT id FROM  WHERE id=$1",
+            /*const Data = await client.query(
+              "SELECT id FROM article WHERE id=$1",
               [updateId]
             );
-            if (test !== ticketData.rows[0]["userId"]) {
+             if (test !== ticketData.rows[0]["userId"]) {
               res.status(404).json({
                 status: "FAIL",
                 message: "update non autorisée",
               });
             } else {*/
-              const upArt = await articleService.updateArticle(
-                updateTitre,
-                updateArt,
-                updateArch
-              );
+            const upArt = await articleService.updateArticle(
+              updateId,
+              updateTitre,
+              updateArt,
+              updateArch
+            );
 
-              if (upArt.rowCount > 0) {
-                res.status(201).json({
-                  status: "success",
-                  message: "données modifiées",
-                  data: upArt.rows[0],
-                });
-              } else {
-                res.status(404).json({
-                  status: "FAIL",
-                  message: "Aucun article ne correspond à cet id",
-                });
-              }
+            if (upArt) {
+              res.status(201).json({
+                status: "success",
+                message: "données modifiées",
+                data: upArt,
+              });
+            } else {
+              res.status(400).json({
+                status: "FAIL",
+                message: "valeur manquante",
+              });
             }
-          catch (err) {
+
+            //   }
+          } catch (err) {
             console.log(err);
             res.status(500).json({
               status: "FAIL",
               message: "erreur serveur",
             });
           }
-        } else {
-          res.status(400).json({
-            status: "FAIL",
-            message: "Booléen attendu",
-          });
         }
-      } else {
-        res.status(400).json({
-          status: "FAIL",
-          message: "valeur manquante",
-        });
       }
-    } else {
-      res.status(404).json({
-        status: "FAIL",
-        message: "Nécessite un nombre valable en tant qu'Id",
-      });
     }
   }
 }
