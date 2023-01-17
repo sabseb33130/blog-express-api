@@ -1,59 +1,66 @@
-const client = require('../client');
+const client = require("../client");
 
 class ArticleServices {
-    async getAllArticle() {
-        const data = await client.query('SELECT * FROM article');
-
-        console.log(data.rows);
-        if (data.rowCount) {
-            return data.rows[0];
-        }
-
-        return undefined
+  async getAllArticle() {
+    const data = await client.query("SELECT * FROM article");
+    console.log(data);
+    console.log(data.rows);
+    if (data.rowCount) {
+      return data.rows;
     }
 
-    async getArticleById(id) {
-        const data = await client.query('SELECT * FROM article WHERE id=$1', [id]);
+    return undefined;
+  }
 
-        console.log(data.rows, id);
-        if (data.rowCount) {
-            return data.rows[0];
-        }
+  async getArticleById(id) {
+    const data = await client.query("SELECT * FROM article WHERE id=$1", [id]);
 
-        return undefined
+    console.log(data.rows, id);
+    if (data.rowCount) {
+      return data.rows[0];
     }
 
-    async postArticle(titre, article) {
-        const data = await client.query('INSERT INTO article (titre, article,) VALUES ($1,$2) returning *', [titre, article]);
-        console.log(data.rows);
-        if (data.rowCount) {
-            return data.rows[0];
-        }
+    return undefined;
+  }
 
-        return undefined
-    }
-    
-    async updateArticle(titre, article, archiver) {
-        const data = await client.query('UPDATE article SET (titre, article, archiver) VALUES ($4,$5,true) WHERE id = $1 returning *', [titre, article, archiver]);
-        console.log(data.rows, id);
-        if (data.rowCount) {
-            return data.rows[0];
-        }
-
-        return undefined
+  async postArticle(titre, article) {
+    const data = await client.query(
+      "INSERT INTO article (titre, article) VALUES ($1,$2) returning *",
+      [titre, article]
+    );
+    console.log(data.rows);
+    if (data.rowCount) {
+      return data.rows[0];
     }
 
+    return undefined;
+  }
 
-    async deleteArticle(id) {
-        const data = await client.query('DELETE FROM article WHERE id=$1 returning *', [id]);
-        console.log(data.rows, id);
-        if (data.rowCount) {
-            return data.rows[0];
-        }
-
-        return undefined
+  async updateArticle(titre, article, archiver) {
+    const data = await client.query(
+      "UPDATE article SET (titre, article, archiver) VALUES ($4,$5,true) WHERE id = $1 returning *",
+      [titre, article, archiver]
+    );
+    console.log(data.rows, id);
+    if (data.rowCount) {
+      return data.rows[0];
     }
 
+    return undefined;
+  }
+
+  async deleteArticle(id) {
+    const data = await client.query(
+      "DELETE FROM article WHERE id=$1 returning *",
+      [id]
+    );
+    console.log(data.rows, id);
+    if (data.rowCount) {
+      return data.rows[0];
+    }
+
+    return undefined;
+  }
 }
 
-module.exports = ArticleServices
+module.exports = ArticleServices;
