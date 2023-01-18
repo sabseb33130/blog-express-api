@@ -56,12 +56,12 @@ class CommentairesController {
     }
 
     async postCommentaire(req, res) {
-        console.log(req.body);
         const commentaire = req.body.commentaire;
-        if (commentaire != null) {
-            console.log(commentaire);
+        const user_id = req.userId;
+        console.log(user_id)
+        if (commentaire != null && user_id != null) {
             try {
-                const validated_commentaire = await commentairesService.postCommentaire(commentaire);
+                const validated_commentaire = await commentairesService.postCommentaire(user_id, commentaire);
                 res.status(200).json({
                     status: "success",
                     message: "commentaire posté avec succés",
@@ -135,16 +135,7 @@ class CommentairesController {
                     });
                 } else {
                     try {
-                        /*const Data = await client.query(
-                        "SELECT id FROM article WHERE id=$1",
-                        [updateId]
-                        );
-                        if (test !== ticketData.rows[0]["userId"]) {
-                        res.status(404).json({
-                            status: "FAIL",
-                            message: "update non autorisée",
-                        });
-                        } else {*/
+
                         const upCom = await commentairesService.updateCommentaire(
                             updateId,
                             updateCom,
