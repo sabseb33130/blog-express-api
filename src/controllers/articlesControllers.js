@@ -151,6 +151,7 @@ class ArticleController {
           message: "Nécessite un nombre valable en tant qu'Id",
         });
       } else {
+        
         if (updateArch != true && updateArch != false) {
           res.status(400).json({ status: "FAIL", message: "Booléen attendu" });
         } else {
