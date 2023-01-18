@@ -137,11 +137,12 @@ class ArticleController {
     const updateArch = req.body.archiver;
     const updateTitre = req.body.titre;
     const test = req.userId;
-    const Data = await client.query("SELECT * FROM article WHERE id=$1", [
+    const data = await client.query("SELECT * FROM article WHERE id=$1", [
       updateId,
     ]);
 
-    if (test !== Data.rows[0].user_id) {
+    if (test !== data.rows[0].user_id) {
+      console.log(test);
       res.status(404).json({
         status: "FAIL",
         message: "update non autorisée",
@@ -153,6 +154,7 @@ class ArticleController {
           message: "Nécessite un nombre valable en tant qu'Id",
         });
       } else {
+        
         if (updateArch != true && updateArch != false) {
           res.status(400).json({ status: "FAIL", message: "Booléen attendu" });
         } else {

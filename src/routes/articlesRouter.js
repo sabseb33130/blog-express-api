@@ -5,20 +5,10 @@ const articleController = new ArticleController();
 
 const articleRouter = express.Router();
 
-articleRouter.get("/", authenticateJWT, (req, res) =>
-  articleController.getAllArticle(req, res)
-);
-articleRouter.get("/:id", authenticateJWT, (req, res) =>
-  articleController.getArticleById(req, res)
-);
-articleRouter.post("/", authenticateJWT, (req, res) =>
-  articleController.postArticle(req, res)
-);
-articleRouter.put("/:id", authenticateJWT, (req, res) =>
-  articleController.updateArticle(req, res)
-);
-articleRouter.delete("/:id", authenticateJWT, (req, res) =>
-  articleController.deleteArticleById(req, res)
-);
+articleRouter.get("/", authenticateJWT,articleController.getAllArticle);
+articleRouter.get("/:id", authenticateJWT,articleController.getArticleById);
+articleRouter.post("/", authenticateJWT,articleController.postArticle);
+articleRouter.put("/:id", authenticateJWT,articleController.updateArticle);
+articleRouter.delete("/:id", authenticateJWT,articleController.deleteArticleById);
 
 module.exports = articleRouter;
