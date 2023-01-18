@@ -20,19 +20,3 @@ const authenticateJWT = (req, res, next) => {
 };
 
 module.exports = authenticateJWT;
-/*if (err) {
-  return res.status(403).json({
-    status: "Forbidden",
-    message: "Clé de sécurité utilisateur incorrecte",
-  });
-}
-
-req.userId = decode;
-
-next();
-});
-} else {
-res.status(401).json({
-status: "FAIL",
-message: "Utilisateur inconnu",
-});*/

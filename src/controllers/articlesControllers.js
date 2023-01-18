@@ -92,7 +92,6 @@ class ArticleController {
     const articleId = await client.query("SELECT * FROM article WHERE id=$1", [
       deleteId,
     ]);
-    console.log(articleId);
 
     if (deleteId != Number(deleteId)) {
       res.status(404).json({
