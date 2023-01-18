@@ -6,11 +6,12 @@ const authenticateJWT = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   if (authHeader) {
     jwt.verify(token, accessTokenSecret, (err, decode) => {
+      console.log(decode);
       if (err) {
         return res.sendStatus(403);
       }
 
-      req.userId = decode.id;
+      req.userId = decode;
 
       next();
     });

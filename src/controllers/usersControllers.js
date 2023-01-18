@@ -14,12 +14,11 @@ class UsersControllers {
     const password = req.body.password;
     try {
       const user = await usersServices.getUserByName(name);
-      const id = user.id;
 
       if (user) {
         bcrypt.compare(password, user.password, async function (err, result) {
           if (result == true) {
-            const accessToken = jwt.sign(id, accessTokenSecret);
+            const accessToken = jwt.sign(user.id, accessTokenSecret);
 
             res.status(200).json({
               status: "OK",
@@ -44,7 +43,7 @@ class UsersControllers {
     } catch (err) {
       res.status(500).json({
         status: "fail",
-        message: "erreur serveur",
+        message: "login erreur serveur",
       });
       console.log(err.stack);
     }
@@ -66,7 +65,7 @@ class UsersControllers {
       } catch (err) {
         res.status(500).json({
           status: "fail",
-          message: "erreur serveur",
+          message: "register erreur serveur",
         });
         console.log(err.stack);
       }
