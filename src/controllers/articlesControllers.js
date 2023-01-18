@@ -18,7 +18,6 @@ class ArticleController {
         status: "fail",
         message: "erreur serveur",
       });
-      console.log(err.stack);
     }
   }
 
@@ -90,53 +89,46 @@ class ArticleController {
   async deleteArticleById(req, res) {
     const deleteId = req.params.id;
     const test = req.userId;
-    const deleted_art = await articleService.deleteArticle(deleteId);
-    const articleData = await client.query(
-      "SELECT id,user_id FROM article WHERE id=$1",
-      [deleteId]
-    );
+    const articleId = await client.query("SELECT * FROM article WHERE id=$1", [
+      deleteId,
+    ]);
+    console.log(articleId);
 
-    if (articleData || test === undefined) {
-      res.status(200).json({
-        status: "success",
-        message: "article  supprimé",
-        data: deleted_art,
-      });
-    } else if (test !== articleData.rows[0].user_id) {
+    if (deleteId != Number(deleteId)) {
       res.status(404).json({
-        status: "FAIL",
-        message: "suppression non autorisée",
+        status: "fail",
+        message: "numéro d'ID nécessaire",
       });
     } else {
-      if (!Number.isNaN(Number(deleteId))) {
-        try {
-          if (deleted_art.id !== undefined) {
+      if (articleId.rowCount == 0) {
+        res.status(200).json({
+          status: "Erreur",
+          message: "Article déjà supprimé",
+        });
+      } else {
+        if (test != articleId.rows[0].user_id) {
+          res.status(404).json({
+            status: "FAIL",
+            message: "suppression non autorisée",
+          });
+        } else {
+          const deleted_art = await articleService.deleteArticle(deleteId);
+          try {
             res.status(200).json({
               status: "success",
-              message: "article supprimé",
-              data: deleted_art,
+              message: deleted_art,
             });
-          } else {
-            res.status(404).json({
+          } catch (error) {
+            res.status(500).json({
               status: "fail",
-              message: "id ne correspond à aucun article",
+              message: "erreur serveur",
             });
           }
-        } catch (err) {
-          res.status(500).json({
-            status: "fail",
-            message: "erreur serveur",
-          });
-          console.log(err.stack);
         }
-      } else {
-        res.status(404).json({
-          status: "fail",
-          message: "numéro d'ID nécessaire",
-        });
       }
     }
   }
+
   async updateArticle(req, res) {
     const test = req.userId;
     const updateId = req.params.id;
@@ -147,7 +139,7 @@ class ArticleController {
     const data = await client.query("SELECT * FROM article WHERE id=$1", [
       updateId,
     ]);
-    //console.log(Data);
+
     if (test !== data.rows[0].user_id) {
       res.status(404).json({
         status: "FAIL",
@@ -194,7 +186,6 @@ class ArticleController {
                 });
               }
             } catch (err) {
-              console.log(err);
               res.status(500).json({
                 status: "FAIL",
                 message: "erreur serveur",

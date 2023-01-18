@@ -52,6 +52,7 @@ class ArticleServices {
       "DELETE FROM article WHERE id=$1 returning *",
       [id]
     );
+    // console.log(data);
 
     if (data.rowCount) {
       return data.rows[0];
