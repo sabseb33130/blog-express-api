@@ -31,7 +31,7 @@ app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/commentaires", commentairesRouter);
 app.all("*", function (req, res) {
-  res.status(404).end("not found");
+  res.status(404).end("index not found");
 });
 // ecoute le port 8000
 app.listen(port, () => {

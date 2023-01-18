@@ -21,10 +21,10 @@ class ArticleServices {
     return undefined;
   }
 
-  async postArticle(titre, article) {
+  async postArticle(user_id, titre, article) {
     const data = await client.query(
-      "INSERT INTO article (titre, article) VALUES ($1,$2) returning *",
-      [titre, article]
+      "INSERT INTO article (user_id,titre, article) VALUES ($1,$2,$3)  returning *",
+      [user_id, titre, article]
     );
 
     if (data.rowCount) {
@@ -39,6 +39,7 @@ class ArticleServices {
       "UPDATE article SET titre=$2, article=$3, archiver=$4 WHERE id = $1 returning *",
       [id, titre, article, archiver]
     );
+
     if (data.rowCount) {
       return data.rows[0];
     }

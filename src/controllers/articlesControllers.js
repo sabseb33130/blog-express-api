@@ -43,7 +43,7 @@ class ArticleController {
       } catch (err) {
         res.status(500).json({
           status: "fail",
-          message: "erreur serveur",
+          message: "get id erreur serveur",
         });
         console.log(err.stack);
       }
@@ -56,15 +56,19 @@ class ArticleController {
   }
 
   async postArticle(req, res) {
-    console.log(req.body);
+    //const user_id = req.body.user_id;
     const titre = req.body.titre;
     const article = req.body.article;
-    if (titre && article != null) {
+    const user_id = req.userId;
+
+    if (titre !== null && article !== null) {
       try {
         const validated_article = await articleService.postArticle(
+          user_id,
           titre,
           article
         );
+
         res.status(200).json({
           status: "success",
           message: "article posté avec succés",
@@ -73,7 +77,7 @@ class ArticleController {
       } catch (err) {
         res.status(500).json({
           status: "fail",
-          message: "erreur serveur",
+          message: "erreur serveur post",
         });
       }
     } else {
@@ -83,27 +87,30 @@ class ArticleController {
       });
     }
   }
-
   async deleteArticleById(req, res) {
     const deleteId = req.params.id;
     const test = req.userId;
+    const deleted_art = await articleService.deleteArticle(deleteId);
+    const articleData = await client.query(
+      "SELECT id,user_id FROM article WHERE id=$1",
+      [deleteId]
+    );
 
-    if (!Number.isNaN(Number(deleteId))) {
-      try {
-        const articleData = await client.query(
-          "SELECT id,user_id FROM article WHERE id=$1",
-          [deleteId]
-        );
-        console.log(articleData.rows[0]["userId"]);
-        if (test !== articleData.rows[0]["userId"]) {
-          res.status(404).json({
-            status: "FAIL",
-            message: "suppression non autorisée",
-          });
-        } else {
-          const deleted_art = await articleService.deleteArticle(deleteId);
-
-          if (deleted_art.id === undefined) {
+    if (articleData || test === undefined) {
+      res.status(200).json({
+        status: "success",
+        message: "article  supprimé",
+        data: deleted_art,
+      });
+    } else if (test !== articleData.rows[0].user_id) {
+      res.status(404).json({
+        status: "FAIL",
+        message: "suppression non autorisée",
+      });
+    } else {
+      if (!Number.isNaN(Number(deleteId))) {
+        try {
+          if (deleted_art.id !== undefined) {
             res.status(200).json({
               status: "success",
               message: "article supprimé",
@@ -115,33 +122,33 @@ class ArticleController {
               message: "id ne correspond à aucun article",
             });
           }
+        } catch (err) {
+          res.status(500).json({
+            status: "fail",
+            message: "erreur serveur",
+          });
+          console.log(err.stack);
         }
-      } catch (err) {
-        res.status(500).json({
+      } else {
+        res.status(404).json({
           status: "fail",
-          message: "erreur serveur",
+          message: "numéro d'ID nécessaire",
         });
-        console.log(err.stack);
       }
-    } else {
-      res.status(404).json({
-        status: "fail",
-        message: "numéro d'ID nécessaire",
-      });
     }
   }
-
   async updateArticle(req, res) {
-    const updateId = Number(req.params.id);
+    const test = req.userId;
+    const updateId = req.params.id;
     const updateArt = req.body.article;
     const updateArch = req.body.archiver;
     const updateTitre = req.body.titre;
-    const test = req.userId;
-    const Data = await client.query("SELECT * FROM article WHERE id=$1", [
+
+    const data = await client.query("SELECT * FROM article WHERE id=$1", [
       updateId,
     ]);
-
-    if (test !== Data.rows[0].user_id) {
+    //console.log(Data);
+    if (test !== data.rows[0].user_id) {
       res.status(404).json({
         status: "FAIL",
         message: "update non autorisée",
@@ -163,7 +170,7 @@ class ArticleController {
           ) {
             res.status(404).json({
               status: "FAIL",
-              message: "Aucun article ne correspond à cet id",
+              message: "Donnée reçu incorrect",
             });
           } else {
             try {
