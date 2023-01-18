@@ -7,14 +7,20 @@ const authenticateJWT = (req, res, next) => {
   if (authHeader) {
     jwt.verify(token, accessTokenSecret, (err, decode) => {
       if (err) {
-        return res.sendStatus(403);
+        return res.status(403).json({
+          status: "FORBIDDEN",
+          message: "Clé de sécurité utilisateur incorrecte",
+        });
       }
 
       req.userId = decode.id;;
       next();
     });
   } else {
-    res.sendStatus(401);
+    res.sendStatus(401).json({
+      status: "Fail",
+      message: "Utilisateur inconnu",
+    });
   }
 };
 
