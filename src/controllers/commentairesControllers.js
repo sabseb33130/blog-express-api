@@ -5,75 +5,55 @@ require("dotenv").config();
 const commentairesService = new CommentairesServices();
 
 class CommentairesController {
-  /*  async getAllCommentaires(req, res) {
-        try {
-            const com = await commentairesService.getAllCommentaires();
-
-            res.status(200).json({
-                status: "success",
-                data: com,
-            });
-        } catch (err) {
-            res.status(500).json({
-                status: "fail",
-                message: "erreur serveur",
-            });
-            console.log(err.stack);
-        }
-    }*/
-
   async getCommentaireById(req, res) {
     const commentaire_articleId = req.params.id;
-    const articleId = await client.query(
-      "SELECT * FROM commentaire WHERE user_id_article=$1",
-      [commentaire_articleId]
-    );
 
-    if (commentaire_articleId != Number(commentaire_articleId)) {
+    if (Number.isNaN(Number(commentaire_articleId))) {
       res.status(404).json({
         status: "fail",
         message: "numéro d'ID de l'article nécessaire",
       });
+      return;
+    }
+    const articleId = await client.query(
+      "SELECT * FROM commentaire WHERE user_id_article=$1",
+      [commentaire_articleId]
+    );
+    const articleOk = await client.query("SELECT * FROM article WHERE id=$1", [
+      commentaire_articleId,
+    ]);
+
+    if (articleOk.rowCount === 0) {
+      res.status(404).json({
+        status: "Erreur",
+        message: "Article inexistant",
+      });
+      return;
+    }
+
+    if (articleId.rowCount === 0) {
+      res.status(400).json({
+        status: "Erreur",
+        message: "Pas de commentaire",
+      });
     } else {
-      if (articleId.rowCount == 0) {
-        res.status(400).json({
-          status: "Erreur",
-          message: "Article inexistant",
+      try {
+        const id_commentaire = await commentairesService.getCommentaireById(
+          commentaire_articleId
+        );
+        res.status(200).json({
+          status: "success",
+          data: id_commentaire,
         });
-      } else {
-        // if (commentaire_articleId === articleId.rows[0].user_id_article) {
-        try {
-          const id_commentaire = await commentairesService.getCommentaireById(
-            commentaire_articleId
-          );
-          if (id_commentaire === undefined) {
-            res.status(200).json({
-              status: "success",
-              data: "pas de commentaire",
-            });
-          } else if (commentaire_articleId >= 1) {
-            res.status(200).json({
-              status: "success",
-              data: id_commentaire,
-            });
-          } else {
-            res.status(404).json({
-              status: "fail",
-              message: "id ne correspond à aucun commentaire",
-            });
-          }
-        } catch (err) {
-          res.status(500).json({
-            status: "fail",
-            message: "erreur serveur",
-          });
-          console.log(err.stack);
-        }
+      } catch (err) {
+        res.status(500).json({
+          status: "fail",
+          message: "erreur serveur",
+        });
+        console.log(err.stack);
       }
     }
-    // }
   }
-
   async postCommentaire(req, res) {
     const commentaire = req.body.text_commentaire;
     console.log(commentaire);
@@ -154,15 +134,15 @@ class CommentairesController {
       } else {
         try {
           /*const Data = await client.query(
-                        "SELECT id FROM article WHERE id=$1",
-                        [updateId]
-                        );
-                        if (test !== ticketData.rows[0]["userId"]) {
-                        res.status(404).json({
-                            status: "FAIL",
-                            message: "update non autorisée",
-                        });
-                        } else {*/
+                                      "SELECT id FROM article WHERE id=$1",
+                                      [updateId]
+                                      );
+                                      if (test !== ticketData.rows[0]["userId"]) {
+                                      res.status(404).json({
+                                          status: "FAIL",
+                                          message: "update non autorisée",
+                                      });
+                                      } else {*/
           const upCom = await commentairesService.updateCommentaire(
             updateId,
             updateCom
