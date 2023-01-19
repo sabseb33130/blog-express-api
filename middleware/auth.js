@@ -13,7 +13,7 @@ const authenticateJWT = (req, res, next) => {
         });
       }
 
-      req.userId = decode.id;;
+      req.userId = decode.id;
       next();
     });
   } else {
