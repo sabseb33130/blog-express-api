@@ -1,6 +1,6 @@
 // imports
 const express = require("express");
-require("dotenv").config(); // permet de cacher les donnée dans un autrs fichier .env
+require("dotenv").config();
 
 const usersRouter = require("./routes/usersRouter");
 const commentairesRouter = require("./routes/commentairesRouter");
