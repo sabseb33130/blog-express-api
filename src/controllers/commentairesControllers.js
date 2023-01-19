@@ -57,6 +57,8 @@ class CommentairesController {
   async postCommentaire(req, res) {
     const commentaire = req.body.text_commentaire;
     const user_id_article = req.params.id;
+    const test = req.userId;
+
     if (Number.isNaN(Number(user_id_article))) {
       res.status(404).json({
         status: "fail",
@@ -82,6 +84,15 @@ class CommentairesController {
       });
       return;
     }
+
+    if (test != articleOk.rows[0].user_id) {
+      res.status(403).json({
+        status: "Forbidden",
+        message: "Vous n'êtes pas autorisé à ajouter un commentaire",
+      });
+      return;
+    }
+
     try {
       const validated_commentaire = await commentairesService.postCommentaire(
         commentaire,
@@ -111,10 +122,10 @@ class CommentairesController {
       return;
     }
 
-
-    const commentaireOk = await client.query("SELECT * FROM commentaire WHERE id_commentaire=$1", [
-      deleteId,
-    ]);
+    const commentaireOk = await client.query(
+      "SELECT * FROM commentaire WHERE id_commentaire=$1",
+      [deleteId]
+    );
     if (commentaireOk.rowCount === 0) {
       res.status(404).json({
         status: "Erreur",
@@ -123,9 +134,7 @@ class CommentairesController {
       return;
     }
     try {
-      const deleted_com = await commentairesService.deleteCommentaire(
-        deleteId
-      );
+      const deleted_com = await commentairesService.deleteCommentaire(deleteId);
       if (deleted_com !== undefined) {
         res.status(200).json({
           status: "success",
@@ -133,7 +142,6 @@ class CommentairesController {
           data: deleted_com,
         });
       }
-
     } catch (err) {
       res.status(500).json({
         status: "fail",
@@ -142,7 +150,6 @@ class CommentairesController {
       console.log(err.stack);
     }
   }
-
 
   async updateCommentaire(req, res) {
     const updateId = req.params.id;
@@ -155,10 +162,10 @@ class CommentairesController {
       return;
     }
 
-
-    const commentaireOk = await client.query("SELECT * FROM commentaire WHERE id_commentaire=$1", [
-      updateId
-    ]);
+    const commentaireOk = await client.query(
+      "SELECT * FROM commentaire WHERE id_commentaire=$1",
+      [updateId]
+    );
     if (commentaireOk.rowCount === 0) {
       res.status(404).json({
         status: "Erreur",
@@ -168,7 +175,8 @@ class CommentairesController {
     }
     try {
       const update_com = await commentairesService.updateCommentaire(
-        updateId, comUp
+        updateId,
+        comUp
       );
       if (update_com !== undefined) {
         res.status(200).json({
@@ -177,7 +185,6 @@ class CommentairesController {
           data: update_com,
         });
       }
-
     } catch (err) {
       res.status(500).json({
         status: "fail",
@@ -187,6 +194,5 @@ class CommentairesController {
     }
   }
 }
-
 
 module.exports = CommentairesController;

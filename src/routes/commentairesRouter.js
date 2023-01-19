@@ -5,9 +5,21 @@ const authenticateJWT = require("../../middleware/auth");
 
 const commentairesRouter = express.Router();
 
-commentairesRouter.get("/:id",commentaireController.getCommentaireById);
-commentairesRouter.post("/:id", authenticateJWT, commentaireController.postCommentaire);
-commentairesRouter.put("/:id", authenticateJWT, commentaireController.updateCommentaire);
-commentairesRouter.delete("/:id", authenticateJWT, commentaireController.deleteCommentaireById);
+commentairesRouter.get("/:id", commentaireController.getCommentaireById);
+commentairesRouter.post(
+  "/:id",
+  authenticateJWT,
+  commentaireController.postCommentaire
+);
+commentairesRouter.put(
+  "/:id",
+  authenticateJWT,
+  commentaireController.updateCommentaire
+);
+commentairesRouter.delete(
+  "/:id",
+  authenticateJWT,
+  commentaireController.deleteCommentaireById
+);
 
 module.exports = commentairesRouter;
