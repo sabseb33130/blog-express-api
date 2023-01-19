@@ -71,7 +71,17 @@ class CommentairesController {
       });
       return;
     }
+    const articleOk = await client.query("SELECT * FROM article WHERE id=$1", [
+      user_id_article,
+    ]);
 
+    if (articleOk.rowCount === 0) {
+      res.status(404).json({
+        status: "Erreur",
+        message: "Article inexistant",
+      });
+      return;
+    }
     try {
       const validated_commentaire = await commentairesService.postCommentaire(
         commentaire,
@@ -93,84 +103,90 @@ class CommentairesController {
   async deleteCommentaireById(req, res) {
     const deleteId = req.params.id;
 
-    if (!Number.isNaN(Number(deleteId))) {
-      try {
-        const deleted_com = await commentairesService.deleteCommentaire(
-          deleteId
-        );
-        if (deleted_com !== undefined) {
-          res.status(200).json({
-            status: "success",
-            message: "commentaire supprimé",
-            data: deleted_com,
-          });
-        } else {
-          res.status(404).json({
-            status: "fail",
-            message: "id ne correspond à aucun commentaire",
-          });
-        }
-      } catch (err) {
-        res.status(500).json({
-          status: "fail",
-          message: "erreur serveur",
-        });
-        console.log(err.stack);
-      }
-    } else {
+    if (Number.isNaN(Number(deleteId))) {
       res.status(404).json({
         status: "fail",
         message: "numéro d'ID nécessaire",
       });
+      return;
+    }
+
+
+    const commentaireOk = await client.query("SELECT * FROM commentaire WHERE id_commentaire=$1", [
+      deleteId,
+    ]);
+    if (commentaireOk.rowCount === 0) {
+      res.status(404).json({
+        status: "Erreur",
+        message: "commentaire inexistant",
+      });
+      return;
+    }
+    try {
+      const deleted_com = await commentairesService.deleteCommentaire(
+        deleteId
+      );
+      if (deleted_com !== undefined) {
+        res.status(200).json({
+          status: "success",
+          message: "commentaire supprimé",
+          data: deleted_com,
+        });
+      }
+
+    } catch (err) {
+      res.status(500).json({
+        status: "fail",
+        message: "erreur serveur",
+      });
+      console.log(err.stack);
     }
   }
 
+
   async updateCommentaire(req, res) {
-    const updateId = Number(req.params.id);
-    const updateCom = req.body.commentaire;
-    //const test = req.userId;
+    const updateId = req.params.id;
+    const comUp = req.body.text_commentaire;
     if (Number.isNaN(Number(updateId))) {
       res.status(404).json({
-        status: "FAIL",
-        message: "Nécessite un nombre valable en tant qu'Id",
+        status: "fail",
+        message: "numéro d'ID nécessaire",
       });
-    } else {
-      if (updateCom === undefined) {
-        res.status(404).json({
-          status: "FAIL",
-          message: "Aucun commentaire ne correspond à cet id",
+      return;
+    }
+
+
+    const commentaireOk = await client.query("SELECT * FROM commentaire WHERE id_commentaire=$1", [
+      updateId
+    ]);
+    if (commentaireOk.rowCount === 0) {
+      res.status(404).json({
+        status: "Erreur",
+        message: "commentaire inexistant",
+      });
+      return;
+    }
+    try {
+      const update_com = await commentairesService.updateCommentaire(
+        updateId, comUp
+      );
+      if (update_com !== undefined) {
+        res.status(200).json({
+          status: "success",
+          message: "commentaire modifié",
+          data: update_com,
         });
-      } else {
-        try {
-          const upCom = await commentairesService.updateCommentaire(
-            updateId,
-            updateCom
-          );
-
-          if (upCom) {
-            res.status(201).json({
-              status: "success",
-              message: "données modifiées",
-              data: upCom,
-            });
-          } else {
-            res.status(400).json({
-              status: "FAIL",
-              message: "valeur manquante",
-            });
-          }
-
-          //   }
-        } catch (err) {
-          console.log(err);
-          res.status(500).json({
-            status: "FAIL",
-            message: "erreur serveur",
-          });
-        }
       }
+
+    } catch (err) {
+      res.status(500).json({
+        status: "fail",
+        message: "erreur serveur",
+      });
+      console.log(err.stack);
     }
   }
 }
+
 
 module.exports = CommentairesController;

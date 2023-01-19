@@ -43,7 +43,7 @@ class CommentairesServices {
 
   async updateCommentaire(id, commentaire) {
     const data = await client.query(
-      "UPDATE commentaire SET commentaire=$2 WHERE id = $1 returning *",
+      "UPDATE commentaire SET text_commentaire=$2 WHERE id_commentaire = $1 returning *",
       [id, commentaire]
     );
     if (data.rowCount) {
@@ -55,7 +55,7 @@ class CommentairesServices {
 
   async deleteCommentaire(id) {
     const data = await client.query(
-      "DELETE FROM commentaire WHERE id=$1 returning *",
+      "DELETE FROM commentaire WHERE id_commentaire=$1 returning *",
       [id]
     );
 
