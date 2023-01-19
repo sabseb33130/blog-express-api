@@ -26,7 +26,7 @@ class CommentairesServices {
 
   async postCommentaire(commentaire) {
     const data = await client.query(
-      "INSERT INTO commentaire (commentaire) VALUES ($1) returning *",
+      "INSERT INTO commentaire (text_commentaire) VALUES ($1) returning *",
       [commentaire]
     );
 
