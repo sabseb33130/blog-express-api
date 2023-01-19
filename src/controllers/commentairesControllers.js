@@ -113,7 +113,7 @@ class CommentairesController {
 
   async deleteCommentaireById(req, res) {
     const deleteId = req.params.id;
-
+    const test = req.userId;
     if (Number.isNaN(Number(deleteId))) {
       res.status(404).json({
         status: "fail",
@@ -130,6 +130,13 @@ class CommentairesController {
       res.status(404).json({
         status: "Erreur",
         message: "commentaire inexistant",
+      });
+      return;
+    }
+    if (test != commentaireOk.rows[0].user_id) {
+      res.status(403).json({
+        status: "Forbidden",
+        message: "Vous n'êtes pas autorisé à supprimer ce commentaire",
       });
       return;
     }
@@ -154,6 +161,7 @@ class CommentairesController {
   async updateCommentaire(req, res) {
     const updateId = req.params.id;
     const comUp = req.body.text_commentaire;
+    const test = req.userId;
     if (Number.isNaN(Number(updateId))) {
       res.status(404).json({
         status: "fail",
@@ -170,6 +178,13 @@ class CommentairesController {
       res.status(404).json({
         status: "Erreur",
         message: "commentaire inexistant",
+      });
+      return;
+    }
+    if (test != commentaireOk.rows[0].user_id) {
+      res.status(403).json({
+        status: "Forbidden",
+        message: "Vous n'êtes pas autorisé à modifier ce commentaire",
       });
       return;
     }
