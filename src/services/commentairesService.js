@@ -12,8 +12,12 @@ class CommentairesServices {
   }
 
   async getCommentaireById(user_id_article) {
-    const data = await client.query(
+    /* const data = await client.query(
       "SELECT * FROM commentaire WHERE user_id_article=$1",
+      [user_id_article]
+    );*/
+    const data = await client.query(
+      "select id_article,titre,article,text_commentaire,user_id_article from article join commentaire on (commentaire.user_id_article=$1) = (article.id=$1)",
       [user_id_article]
     );
 
@@ -24,12 +28,12 @@ class CommentairesServices {
     return undefined;
   }
 
-  async postCommentaire(commentaire) {
+  async postCommentaire(text_commentaire) {
     const data = await client.query(
-      "INSERT INTO commentaire (commentaire) VALUES ($1) returning *",
-      [commentaire]
+      "INSERT INTO commentaire (text_commentaire) VALUES ($1) returning *",
+      [text_commentaire]
     );
-
+    console.log(data);
     if (data.rowCount) {
       return data.rows[0];
     }

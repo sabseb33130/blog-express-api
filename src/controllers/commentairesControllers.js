@@ -24,9 +24,10 @@ class CommentairesController {
 
   async getCommentaireById(req, res) {
     const commentaire_articleId = req.params.id;
-    const articleId = await client.query("SELECT * FROM article WHERE id=$1", [
-      commentaire_articleId,
-    ]);
+    const articleId = await client.query(
+      "SELECT * FROM commentaire WHERE user_id_article=$1",
+      [commentaire_articleId]
+    );
 
     if (commentaire_articleId != Number(commentaire_articleId)) {
       res.status(404).json({
@@ -35,16 +36,16 @@ class CommentairesController {
       });
     } else {
       if (articleId.rowCount == 0) {
-        res.status(200).json({
+        res.status(400).json({
           status: "Erreur",
-          message: "Artilcle inexistant",
+          message: "Article inexistant",
         });
       } else {
+        // if (commentaire_articleId === articleId.rows[0].user_id_article) {
         try {
           const id_commentaire = await commentairesService.getCommentaireById(
             commentaire_articleId
           );
-          console.log(id_commentaire);
           if (id_commentaire === undefined) {
             res.status(200).json({
               status: "success",
@@ -70,13 +71,13 @@ class CommentairesController {
         }
       }
     }
+    // }
   }
 
   async postCommentaire(req, res) {
-    console.log(req.body);
-    const commentaire = req.body.commentaire;
-    if (commentaire != null) {
-      console.log(commentaire);
+    const commentaire = req.body.text_commentaire;
+    console.log(commentaire);
+    if (commentaire !== null) {
       try {
         const validated_commentaire = await commentairesService.postCommentaire(
           commentaire
