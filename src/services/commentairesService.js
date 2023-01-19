@@ -28,12 +28,12 @@ class CommentairesServices {
     return undefined;
   }
 
-  async postCommentaire(text_commentaire) {
+  async postCommentaire(text_commentaire, user_id_article) {
     const data = await client.query(
-      "INSERT INTO commentaire (text_commentaire) VALUES ($1) returning *",
-      [text_commentaire]
+      "INSERT INTO commentaire (text_commentaire,user_id_article) VALUES ($1,$2) returning *",
+      [text_commentaire, user_id_article]
     );
-    console.log(data);
+
     if (data.rowCount) {
       return data.rows[0];
     }

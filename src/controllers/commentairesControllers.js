@@ -56,11 +56,12 @@ class CommentairesController {
   }
   async postCommentaire(req, res) {
     const commentaire = req.body.text_commentaire;
-    console.log(commentaire);
+    const user_id_article = req.params.id;
     if (commentaire !== null) {
       try {
         const validated_commentaire = await commentairesService.postCommentaire(
-          commentaire
+          commentaire,
+          user_id_article
         );
         res.status(200).json({
           status: "success",
