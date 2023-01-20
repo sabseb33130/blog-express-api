@@ -26,7 +26,8 @@ app.use(function (req, res, next) {
 
   next();
 });
-//activation bodyparse pour JSON
+/**
+ *  Routes*/
 app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/commentaires", commentairesRouter);
