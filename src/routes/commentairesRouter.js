@@ -5,6 +5,9 @@ const authenticateJWT = require("../../middleware/auth");
 
 const commentairesRouter = express.Router();
 
+/**
+ * Différentes Routes pour les requettes sur les commentaires
+ */
 commentairesRouter.get("/:id", commentaireController.getCommentaireById);
 commentairesRouter.post(
   "/:id",

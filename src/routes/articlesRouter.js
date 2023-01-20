@@ -5,6 +5,9 @@ const articleController = new ArticleController();
 
 const articleRouter = express.Router();
 
+/**
+ * Différentes Routes pour les requettes sur les articles
+ */
 articleRouter.get("/", articleController.getAllArticle);
 articleRouter.get("/:id", articleController.getArticleById);
 articleRouter.post("/", authenticateJWT, articleController.postArticle);
