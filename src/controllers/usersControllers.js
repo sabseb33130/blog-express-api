@@ -4,7 +4,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const UsersServices = require("../services/usersServices");
 
-const accessTokenSecret = process.env.ACCESTOKENSECRET;
+const accessTokenSecret = process.env.ACCESSTOKENSECRET;
 
 const usersServices = new UsersServices();
 
