@@ -5,6 +5,13 @@ require("dotenv").config();
 const commentairesService = new CommentairesServices();
 
 class CommentairesController {
+  /**
+   * Fonction qui affiche tous les commentaire d'un article par son id.
+   * Gestion de l'état de la demande d'affichage.
+   * @param {any} req 
+   * @param {any} res 
+   * @returns 
+   */
   async getCommentaireById(req, res) {
     const commentaire_articleId = req.params.id;
 
@@ -54,6 +61,13 @@ class CommentairesController {
       }
     }
   }
+  /**
+   * Fonction qui publie le commentaire d'un article.
+   * Gestion de la demande de publication.
+   * @param {any} req 
+   * @param {any} res 
+   * @returns 
+   */
   async postCommentaire(req, res) {
     const commentaire = req.body.text_commentaire;
     const user_id_article = req.params.id;
@@ -110,7 +124,13 @@ class CommentairesController {
       });
     }
   }
-
+/**
+ * Fonction qui supprime un commentaire d'un article.
+ * Gestion de l'état de la demande de suppression.
+ * @param {any} req 
+ * @param {any} res 
+ * @returns 
+ */
   async deleteCommentaireById(req, res) {
     const deleteId = req.params.id;
     const test = req.userId;
@@ -157,7 +177,13 @@ class CommentairesController {
       console.log(err.stack);
     }
   }
-
+/**
+ * Fonction qui modifie un commentaire d'un article.
+ * Gestion de l'état de la demande de modification.
+ * @param {any} req 
+ * @param {any} res 
+ * @returns 
+ */
   async updateCommentaire(req, res) {
     const updateId = req.params.id;
     const comUp = req.body.text_commentaire;

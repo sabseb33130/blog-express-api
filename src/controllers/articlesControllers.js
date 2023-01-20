@@ -5,6 +5,12 @@ require("dotenv").config();
 const articleService = new ArticleServices();
 
 class ArticleController {
+  /**
+   * Fonction qui affiche tous les Articles existants.
+   * Gestion de l'état de la demande d'affichage.
+   * @param {any} req 
+   * @param {any} res 
+   */
   async getAllArticle(req, res) {
     try {
       const art = await articleService.getAllArticle();
@@ -20,7 +26,12 @@ class ArticleController {
       });
     }
   }
-
+/**
+ * Fonction qui affiche un seul article.
+ * Gestion de l'état de la demande d'affichage.
+ * @param {any} req 
+ * @param {any} res 
+ */
   async getArticleById(req, res) {
     const articleId = req.params.id;
 
@@ -53,7 +64,12 @@ class ArticleController {
       });
     }
   }
-
+/**
+ * Fonction qui publie un article avec un titre et un contenu.
+ * Gestion de l'état de la demande de publication.
+ * @param {any} req 
+ * @param {any} res 
+ */
   async postArticle(req, res) {
     //const user_id = req.body.user_id;
     const titre = req.body.titre;
@@ -86,6 +102,12 @@ class ArticleController {
       });
     }
   }
+  /**
+   * Fonction qui supprime un article avec ses commentaire.
+   * Gestion de l'état de la demande de suppression.
+   * @param {any} req 
+   * @param {any} res 
+   */
   async deleteArticleById(req, res) {
     const deleteId = req.params.id;
     const test = req.userId;
@@ -127,7 +149,12 @@ class ArticleController {
       }
     }
   }
-
+/**
+ * Fonction qui modifie le titre d'un article et/ou son contenu.
+ * Gestion de l'état de la demande de modification.
+ * @param {any} req 
+ * @param {any} res 
+ */
   async updateArticle(req, res) {
     const test = req.userId;
     const updateId = req.params.id;
