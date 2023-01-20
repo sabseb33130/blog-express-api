@@ -3,14 +3,20 @@ const CommentairesServices = require("../services/commentairesService");
 require("dotenv").config();
 
 const commentairesService = new CommentairesServices();
-
+/**
+ *  Class CommentaireController qui contient les methodes:
+ * * getCommentaireById(req, res)
+ * * postCommentaire(req, res)
+ * * deleteCommentaireById(req, res)
+ * * updateCommentaire(req, res)
+ */
 class CommentairesController {
   /**
-   * Fonction qui affiche tous les commentaire d'un article par son id.
+   * Méthode qui affiche tous les commentaire d'un article par son id.
    * Gestion de l'état de la demande d'affichage.
-   * @param {any} req 
-   * @param {any} res 
-   * @returns 
+   * @param {any} req
+   * @param {any} res
+   * @returns
    */
   async getCommentaireById(req, res) {
     const commentaire_articleId = req.params.id;
@@ -62,11 +68,11 @@ class CommentairesController {
     }
   }
   /**
-   * Fonction qui publie le commentaire d'un article.
+   * Méthode qui publie le commentaire d'un article.
    * Gestion de la demande de publication.
-   * @param {any} req 
-   * @param {any} res 
-   * @returns 
+   * @param {any} req
+   * @param {any} res
+   * @returns
    */
   async postCommentaire(req, res) {
     const commentaire = req.body.text_commentaire;
@@ -124,13 +130,13 @@ class CommentairesController {
       });
     }
   }
-/**
- * Fonction qui supprime un commentaire d'un article.
- * Gestion de l'état de la demande de suppression.
- * @param {any} req 
- * @param {any} res 
- * @returns 
- */
+  /**
+   * Méthode qui supprime un commentaire d'un article.
+   * Gestion de l'état de la demande de suppression.
+   * @param {any} req
+   * @param {any} res
+   * @returns
+   */
   async deleteCommentaireById(req, res) {
     const deleteId = req.params.id;
     const test = req.userId;
@@ -177,13 +183,13 @@ class CommentairesController {
       console.log(err.stack);
     }
   }
-/**
- * Fonction qui modifie un commentaire d'un article.
- * Gestion de l'état de la demande de modification.
- * @param {any} req 
- * @param {any} res 
- * @returns 
- */
+  /**
+   * Méthode qui modifie un commentaire d'un article.
+   * Gestion de l'état de la demande de modification.
+   * @param {any} req
+   * @param {any} res
+   * @returns
+   */
   async updateCommentaire(req, res) {
     const updateId = req.params.id;
     const comUp = req.body.text_commentaire;

@@ -1,9 +1,17 @@
 const client = require("../client");
 
+/**
+ * Classe CommentairesServices contenant les Method
+ * * getAllCommentaires()
+ * * getCommentaireById(user_id_article)
+ * * postCommentaire(text_commentaire, user_id_article)
+ * * updateCommentaire(id, commentaire)
+ * * deleteCommentaire(id)
+ */
 class CommentairesServices {
   /**
    * Methode qui appelle la requête Sql de la récupération de l'enssemble des commentaires publiés
-   * @returns 
+   * @returns
    */
   async getAllCommentaires() {
     const data = await client.query("SELECT * FROM commentaire");
@@ -31,12 +39,12 @@ class CommentairesServices {
 
     return undefined;
   }
-/**
- * Methode qui appelle la requête Sql de la récupération de l'ensemble des commentaires publiés d'un article par son id
- * @param {string} text_commentaire 
- * @param {number} user_id_article 
- * @returns 
- */
+  /**
+   * Methode qui appelle la requête Sql de la récupération de l'ensemble des commentaires publiés d'un article par son id
+   * @param {string} text_commentaire
+   * @param {number} user_id_article
+   * @returns
+   */
   async postCommentaire(text_commentaire, user_id_article) {
     const data = await client.query(
       "INSERT INTO commentaire (text_commentaire,user_id_article) VALUES ($1,$2) returning *",
@@ -49,12 +57,12 @@ class CommentairesServices {
 
     return undefined;
   }
-/**
- * Methode qui appelle la requête Sql de la modification d'un commentaire par son id
- * @param {number} id 
- * @param {string} commentaire 
- * @returns 
- */
+  /**
+   * Methode qui appelle la requête Sql de la modification d'un commentaire par son id
+   * @param {number} id
+   * @param {string} commentaire
+   * @returns
+   */
   async updateCommentaire(id, commentaire) {
     const data = await client.query(
       "UPDATE commentaire SET text_commentaire=$2 WHERE id_commentaire = $1 returning *",
@@ -66,11 +74,11 @@ class CommentairesServices {
 
     return undefined;
   }
-/**
- * Methode qui appelle la requête Sql de la suppression d'un commentaire par l'id du commentaire
- * @param {number} id 
- * @returns 
- */
+  /**
+   * Methode qui appelle la requête Sql de la suppression d'un commentaire par l'id du commentaire
+   * @param {number} id
+   * @returns
+   */
   async deleteCommentaire(id) {
     const data = await client.query(
       "DELETE FROM commentaire WHERE id_commentaire=$1 returning *",

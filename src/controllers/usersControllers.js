@@ -7,13 +7,17 @@ const UsersServices = require("../services/usersServices");
 const accessTokenSecret = process.env.ACCESSTOKENSECRET;
 
 const usersServices = new UsersServices();
-
+/**
+ * *Class UsersControllers contenant les methodes
+ * * login(req, res)
+ * * register(req, res)
+ */
 class UsersControllers {
   /**
-   * Fonction qui permets la vérification de l'existance d'un utilisteur avec son nom,son mot de passe et lui fourni une clé de sécurité pour différentes opérations.
+   * Methode qui permet la vérification de l'existance d'un utilisteur avec son nom,son mot de passe et lui fourni une clé de sécurité pour différentes opérations.
    * Gestion de l'état de la demande de vérification.
-   * @param {any} req 
-   * @param {any} res 
+   * @param {any} req
+   * @param {any} res
    */
   async login(req, res) {
     const name = req.body.name;
@@ -52,12 +56,12 @@ class UsersControllers {
       console.log(err.stack);
     }
   }
-/**
- * Fonction qui permet l'enregistrement d'un utilisateur avec son nom et son mot de passe.
- * Gestion de l'état de la demande d'enregistrement.
- * @param {any} req 
- * @param {any} res 
- */
+  /**
+   * Methode qui permet l'enregistrement d'un utilisateur avec son nom et son mot de passe.
+   * Gestion de l'état de la demande d'enregistrement.
+   * @param {any} req
+   * @param {any} res
+   */
   async register(req, res) {
     const name = req.body.name;
     const password = req.body.password;
